@@ -25,8 +25,8 @@ def shuffle_data(data, label):
 
 def train(data, label):
     data_in = tf.placeholder(tf.float32, [None, 100,100,3], name="data_in")
-    label_in = tf.placeholder(tf.float32, [None, 3])
     print data_in.name
+    label_in = tf.placeholder(tf.float32, [None, 3])
     out = tf.layers.conv2d(data_in, 4, 3,padding='same')
     out = tf.layers.max_pooling2d(out, 2, 2, padding='same')
     out = tf.nn.relu(out)
@@ -34,7 +34,8 @@ def train(data, label):
     out = tf.layers.dense(out, 1000, activation=tf.nn.relu)
     out = tf.layers.dense(out, 256, activation=tf.nn.relu)
     pred = tf.layers.dense(out, 3)
-    out_label = tf.argmax(pred, 1, name="output")
+    out_label = tf.argmax(pred, 1,name="output")
+    print out_label.name
 
     loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=label_in, logits=pred))
     opt = tf.train.AdamOptimizer(learning_rate=0.001)
@@ -45,7 +46,7 @@ def train(data, label):
     sess.run(init)
 
     batch_size = 16
-    for epoch in range(10):
+    for epoch in range(15):
         datas, labels = shuffle_data(data, label)        
         num_batch = len(data)//batch_size
         total_loss = 0
